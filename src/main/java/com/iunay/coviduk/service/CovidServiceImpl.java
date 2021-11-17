@@ -1,5 +1,6 @@
 package com.iunay.coviduk.service;
 
+import com.iunay.coviduk.domain.Response;
 import com.iunay.coviduk.provider.CoronavirusUKProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,12 @@ public class CovidServiceImpl implements CovidService{
     }
 
     @Override
-    public Object getCases() {
+    public Response getCases() {
        return coronavirusUkProvider.getCovidCases();
     }
+
+    //TODO percentuale morti rispetto a casi mese x mese
+    //quanti sono i morti giornalieri in media al mese
+
+
 }

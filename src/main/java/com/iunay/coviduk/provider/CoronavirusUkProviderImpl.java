@@ -1,5 +1,6 @@
 package com.iunay.coviduk.provider;
 
+import com.iunay.coviduk.domain.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,13 +21,14 @@ public class CoronavirusUkProviderImpl implements CoronavirusUKProvider {
     RestTemplate restTemplate;
 
     @Override
-    public Object getCovidCases(){
+    public Response getCovidCases(){
 
         Map<String,String> mappa =  new HashMap<>();
         mappa.put("filters","areaType=nation;areaName=england");
-        mappa.put("structure","{\"date\":\"date\",\"newCases\":\"newCasesByPublishDate\"}");
+        mappa.put("structure","{\"date\":\"date\",\"cases\":\"newCasesByPublishDate\",\"deaths\":\"newDeaths28DaysByPublishDate\"}");
 
         final String baseUrl = "https://api.coronavirus.data.gov.uk/v1/data?filters={filters}&structure={structure}";
+
         // create headers
         HttpHeaders headers = new HttpHeaders();
         List<String> lista = new ArrayList<>();
@@ -40,7 +42,10 @@ public class CoronavirusUkProviderImpl implements CoronavirusUKProvider {
 
         HttpEntity request = new HttpEntity(headers);
 
-       return restTemplate.exchange(baseUrl, HttpMethod.GET, request, String.class,mappa).getBody();
+
+       Response response = restTemplate.exchange(baseUrl, HttpMethod.GET, request, Response.class,mappa).getBody();
+
+       return response;
     }
 
 }
