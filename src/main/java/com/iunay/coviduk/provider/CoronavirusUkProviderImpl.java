@@ -23,27 +23,27 @@ public class CoronavirusUkProviderImpl implements CoronavirusUKProvider {
     @Override
     public Response getCovidCases(){
 
-        Map<String,String> mappa =  new HashMap<>();
-        mappa.put("filters","areaType=nation;areaName=england");
-        mappa.put("structure","{\"date\":\"date\",\"cases\":\"newCasesByPublishDate\",\"deaths\":\"newDeaths28DaysByPublishDate\"}");
+        Map<String,String> params =  new HashMap<>();
+        params.put("filters","areaType=nation;areaName=england");
+        params.put("structure","{\"date\":\"date\",\"cases\":\"newCasesByPublishDate\",\"deaths\":\"newDeaths28DaysByPublishDate\"}");
 
         final String baseUrl = "https://api.coronavirus.data.gov.uk/v1/data?filters={filters}&structure={structure}";
 
         // create headers
         HttpHeaders headers = new HttpHeaders();
+
         List<String> lista = new ArrayList<>();
         lista.add("application/json");
-        List<String> lista1= new ArrayList<>();
-        lista1.add("gzip,deflate,br");
         headers.put("Content-Type",lista);
         headers.put("Accept",lista);
-        headers.put("Accept-Encoding",lista1);
 
+        List<String> lista1= new ArrayList<>();
+        lista1.add("gzip,deflate,br");
+        headers.put("Accept-Encoding",lista1);
 
         HttpEntity request = new HttpEntity(headers);
 
-
-       Response response = restTemplate.exchange(baseUrl, HttpMethod.GET, request, Response.class,mappa).getBody();
+       Response response = restTemplate.exchange(baseUrl, HttpMethod.GET, request, Response.class, params).getBody();
 
        return response;
     }

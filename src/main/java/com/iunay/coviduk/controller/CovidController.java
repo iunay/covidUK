@@ -1,5 +1,6 @@
 package com.iunay.coviduk.controller;
 import com.iunay.coviduk.domain.Response;
+import com.iunay.coviduk.mydomain.MontlyStats;
 import com.iunay.coviduk.service.CovidService;
 import com.iunay.coviduk.service.CovidServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,9 @@ public class CovidController {
         this.covidService = covidService;
     }
 
-    @GetMapping("/covid")
-    Response test() {
-        return covidService.getCases();
+    @GetMapping("/stats")
+    MontlyStats getStats() {
+        return covidService.getMontlyStats();
     }
 
 }
