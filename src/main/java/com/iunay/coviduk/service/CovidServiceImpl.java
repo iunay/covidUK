@@ -8,11 +8,10 @@ import com.iunay.coviduk.provider.CoronavirusUKProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CovidServiceImpl implements CovidService{
@@ -32,7 +31,7 @@ public class CovidServiceImpl implements CovidService{
 
        List<DailyDeath> dailyData  = response.getData();
 
-        Map<String, List<DailyDeath>> aggregate = new HashMap<>();
+       Map<String, List<DailyDeath>> aggregate = new HashMap<>();
 
        for(DailyDeath data : dailyData ) {
            LocalDate localDate = LocalDate.parse(data.getDate());
@@ -50,37 +49,47 @@ public class CovidServiceImpl implements CovidService{
 
        List<MontlyData> montlyDataList = new ArrayList<>();
 
-       for ( Map.Entry<String , List<DailyDeath>> x : aggregate.entrySet()){
+       for ( Map.Entry<String , List<DailyDeath>> dailyDeath : aggregate.entrySet()){
 
-          String date = x.getKey();
-          List<DailyDeath> data = x.getValue();
+          String date = dailyDeath.getKey();
+          List<DailyDeath> data = dailyDeath.getValue();
 
           long deathSum = 0;
           long casesSum = 0;
 
-          for (DailyDeath y : data) {
-              deathSum += y.getDeaths();
-              casesSum += y.getCases();
+          for (DailyDeath dd : data) {
+              deathSum += dd.getDeaths();
+              casesSum += dd.getCases();
           }
+
            double avgDailyDeaths = ((double)deathSum)/data.size();
+           avgDailyDeaths = new BigDecimal(avgDailyDeaths).setScale(2, RoundingMode.HALF_UP).doubleValue();
+
           // 100 : totCases = x : totDeaths
-           double percentage =  (100d * deathSum)/casesSum;
+           double percentageDeathOverCases =  (100d * deathSum)/casesSum;
+           percentageDeathOverCases = new BigDecimal(percentageDeathOverCases).setScale(2,RoundingMode.HALF_UP).doubleValue();
+
 
           MontlyData montlyData = new MontlyData();
-          montlyData.setMonthName(date);
+          montlyData.setYearMonth(date);
           montlyData.setCumulativeCases(casesSum);
           montlyData.setCumulativeDeaths(deathSum);
           montlyData.setAvgDeaths(avgDailyDeaths);
-          montlyData.setPercentageCasesOverDeaths(percentage);
+          montlyData.setPercentageCasesOverDeaths(percentageDeathOverCases);
           montlyDataList.add(montlyData);
        }
-       MontlyStats montlyStats = new MontlyStats();
+        Collections.sort(montlyDataList);
+
+
+        MontlyStats montlyStats = new MontlyStats();
        montlyStats.setMontlyData(montlyDataList);
        return montlyStats;
     }
 
-    //rounding percentage and avg and sorting by  recent date
+    //rounding percentage and avg and sorting by recent date
     // change variable names
+
+    //implements new url (controller) where the user pass month and year required and returns stats for such year and month!!!!!
 
 
 

@@ -9,5 +9,5 @@ import java.util.List;
 public class MontlyStats {
 
     //List<Map<String, MontlyData>> montlyStats;
-    List<MontlyData> montlyData;
+    List<MontlyData> montlyData = new ArrayList<>();
 }
