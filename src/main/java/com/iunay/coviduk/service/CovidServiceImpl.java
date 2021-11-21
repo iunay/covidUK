@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CovidServiceImpl implements CovidService{
@@ -86,12 +87,19 @@ public class CovidServiceImpl implements CovidService{
        return montlyStats;
     }
 
+    @Override
+    public List<MontlyData> getMontlyStatsByMonthAndYear(String year, String month) {
+
+       List<MontlyData> montlyStats = getMontlyStats().getMontlyData();
+
+        List<MontlyData> montlyData =  montlyStats.stream().filter( it -> it.getYearMonth().equals(year+"-"+month)).collect(Collectors.toList());
+
+        return montlyData;
+    }
+
+
     //rounding percentage and avg and sorting by recent date
     // change variable names
-
     //implements new url (controller) where the user pass month and year required and returns stats for such year and month!!!!!
-
-
-
 
 }
