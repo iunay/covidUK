@@ -97,6 +97,78 @@ public class CovidServiceImpl implements CovidService{
         return montlyData;
     }
 
+    @Override
+    public MontlyStats getMontlyStatsSorted(String sort) {
+
+        MontlyStats m = getMontlyStats();
+
+        List<MontlyData> montlyStats = m.getMontlyData();
+
+        String[] namesList = sort.split(",");
+        String sortby = namesList [0];
+        String ascdesc = namesList [1];
+
+        Comparator<MontlyData> comparator= null;
+
+        switch (sortby){
+            case"yearMonth":
+                comparator = new Comparator<MontlyData>() {
+                    @Override
+                    public int compare(MontlyData o1, MontlyData o2) {
+                        return    o1.compareTo(o2);
+                    }
+                };
+               comparator = comparator.reversed();
+                break;
+            case"cumulativeDeaths":
+                comparator = new Comparator<MontlyData>() {
+                    @Override
+                    public int compare(MontlyData o1, MontlyData o2) {
+                        return Long.compare(o1.getCumulativeDeaths(),o2.getCumulativeDeaths());
+                    }
+                };
+                break;
+            case"cumulativeCases":
+                comparator = new Comparator<MontlyData>() {
+                    @Override
+                    public int compare(MontlyData o1, MontlyData o2) {
+                        return Long.compare(o1.getCumulativeCases(),o2.getCumulativeCases());
+                    }
+                };
+                break;
+            case"avgDeaths":
+                comparator = new Comparator<MontlyData>() {
+                    @Override
+                    public int compare(MontlyData o1, MontlyData o2) {
+                        return Double.compare(o1.getAvgDeaths(),o2.getAvgDeaths());
+                    }
+                };
+                break;
+            case"percentageCasesOverDeaths":
+                comparator = new Comparator<MontlyData>() {
+                    @Override
+                    public int compare(MontlyData o1, MontlyData o2) {
+                        return Double.compare(o1.getPercentageCasesOverDeaths(),o2.getPercentageCasesOverDeaths());
+                    }
+                };
+                break;
+            default:
+                System.out.println("Non si puo' ordinare per "+sortby);
+        }
+
+        Collections.sort(montlyStats,comparator);
+
+        if(ascdesc.equals("desc")){
+           Collections.reverse(montlyStats);
+        }
+        return m;
+    }
+
+    //sort=field,desc|asc
+
+    //stesso endpoint /stats fare una filter per anno e sort
+
+    //daily stats % vaccinated and not vaccinated ppl
 
     //rounding percentage and avg and sorting by recent date
     // change variable names

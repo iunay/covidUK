@@ -23,7 +23,11 @@ public class CovidController {
     }
 
     @GetMapping("/stats")
-    MontlyStats getStats() {
+    MontlyStats getStats(@RequestParam(name = "sort",required = false) String sort) {
+
+        if(sort != null){
+          return  covidService.getMontlyStatsSorted(sort);
+        }
         return covidService.getMontlyStats();
     }
 

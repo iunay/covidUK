@@ -11,4 +11,6 @@ public interface CovidService{
      MontlyStats getMontlyStats();
 
      List<MontlyData> getMontlyStatsByMonthAndYear(String month, String year);
+
+     MontlyStats getMontlyStatsSorted( String sort);
 }
